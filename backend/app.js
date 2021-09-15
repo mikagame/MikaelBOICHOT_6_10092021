@@ -1,12 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const helmet = require('helmet');
+const dotenv = require('dotenv');
 
+dotenv.config();
+
+const uri = process.env.URI;
 const path = require('path');
 
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-mongoose.connect('mongodb+srv://dataBase:Mika2@cluster0.0ic6a.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+mongoose.connect(uri,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -23,11 +29,13 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-
+app.use(cors());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/auth', userRoutes);
-app.use('api/sauces', sauceRoutes);
+app.use('/api/sauces', sauceRoutes);
+
+app.use(helmet());
 
 module.exports = app;
