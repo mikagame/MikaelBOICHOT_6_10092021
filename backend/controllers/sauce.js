@@ -1,6 +1,7 @@
-
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
+
+// *** création ajout d'une sauce *** //
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce)
@@ -14,11 +15,16 @@ exports.createSauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
+// *** afficher une sauce *** //
+
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id})
     .then(sauce => res.status(200).json(sauce))
     .catch(error => res.status(404).json({ error }));
 };
+
+
+// *** afficher toutes les sauces *** //
 
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
@@ -26,11 +32,15 @@ exports.getAllSauces = (req, res, next) => {
     .catch(error => res.status(404).json({ error }));
 }
 
+// *** modifier une sauce *** //
+
 exports.updateSauce = (req, res, next) => {
     Sauce.updateOne({_id: req.params.id}, {...req.body, _id: req.params.body})
     .then(sauce => res.status(200).json(sauce))
     .catch(error => res.status(400).json({ error }));
 }
+
+// *** supprimer une sauce *** //
 
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
@@ -44,6 +54,8 @@ exports.deleteSauce = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
   };
+
+  // *** liker/disliker une sauce *** //
 
   exports.likeDislike = (req, res) => {
     let click = req.body.like;
