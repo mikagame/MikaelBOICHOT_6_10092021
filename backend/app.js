@@ -12,6 +12,8 @@ const path = require('path');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
+// *** connexion à mongoDB *** // 
+
 mongoose.connect(uri,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
@@ -19,6 +21,8 @@ mongoose.connect(uri,
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+
+// *** cors *** //
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
