@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
+const rateLimit = require("express-rate-limit");
 
 dotenv.config();
 
@@ -42,4 +43,14 @@ app.use('/api/sauces', sauceRoutes);
 
 app.use(helmet());
 
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 
+  max: 5
+});
+
+app.use(limiter);
+
+
 module.exports = app;
+

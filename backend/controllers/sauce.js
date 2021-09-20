@@ -35,25 +35,38 @@ exports.getAllSauces = (req, res, next) => {
 // *** modifier une sauce *** //
 
 exports.updateSauce = (req, res, next) => {
-    Sauce.updateOne({_id: req.params.id}, {...req.body, _id: req.params.body})
-    .then(sauce => res.status(200).json(sauce))
-    .catch(error => res.status(400).json({ error }));
+    Sauce.findOne({ _id: req.params.id })    
+    .then(sauce => {
+        if(sauce.userId == req.user.userId) {
+            Sauce.updateOne({_id: req.params.id}, {...req.body, _id: req.params.body})
+            .then(sauce => res.status(200).json(sauce))
+            .catch(error => res.status(400).json({ error }));
+        } else {
+            error => res.status(403).json({ error });
+        }
+    })
+    .catch(error => res.status(400).json({ error })); 
+    
 }
 
 // *** supprimer une sauce *** //
 
 exports.deleteSauce = (req, res, next) => {
-    Sauce.findOne({ _id: req.params.id })
-      .then(sauce => {
-        const filename = sauce.imageUrl.split('/images/')[1];
-        fs.unlink(`images/${filename}`, () => {
-          Sauce.deleteOne({ _id: req.params.id })
-            .then(() => res.status(200).json({ message: 'Sauce supprimée'}))
-            .catch(error => res.status(400).json({ error }));
-        });
-      })
-      .catch(error => res.status(500).json({ error }));
-  };
+        Sauce.findOne({ _id: req.params.id })    
+        .then(sauce => {
+            if(sauce.userId == req.user.userId) {
+                const filename = sauce.imageUrl.split('/images/')[1];  
+                fs.unlink(`images/${filename}`, () => {
+                  Sauce.deleteOne({ _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Sauce supprimée'}))
+                    .catch(error => res.status(400).json({ error }));
+                });
+            }else {
+                error => res.status(403).json({ error });
+            };
+        })
+        .catch(error => res.status(400).json({ error }));   
+    }
 
   // *** liker/disliker une sauce *** //
 
