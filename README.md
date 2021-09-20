@@ -24,4 +24,7 @@ Use `Ctrl+C` in the terminal to stop the local server.
 
 ## Dans le dossier backend ##
 
+Créer un fichier .env et insérer une URI de connexion à MongoDB :
+URI=mongodb://username:password@host:port/database?options...'
+
 Run `nodemon server`.
